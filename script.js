@@ -26,38 +26,45 @@ document.getElementById('sentenceForm').addEventListener('submit', function(even
         return;
     }
 
+    const startTime = new Date().getTime(); 
+
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
             const text = e.target.result;
-            sendSentenceForCorrection(text);
+            sendSentencesForCorrection(text.split('\n').filter(sentence => sentence.trim() !== ''), startTime);
         };
         reader.readAsText(file);
     } else {
-        sendSentenceForCorrection(sentence);
+        sendSentencesForCorrection([sentence], startTime);
     }
 });
 
-function sendSentenceForCorrection(sentence) {
+function sendSentencesForCorrection(sentences, startTime) {
     fetch('/correct_sentence', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ sentence })
+        body: JSON.stringify({ sentences })
     })
     .then(response => response.json())
     .then(data => {
+        const endTime = new Date().getTime(); 
+        const timeTaken = (endTime - startTime) / 1000; 
+
         const correctedSentenceDiv = document.getElementById('correctedSentence');
         if (data.error) {
             correctedSentenceDiv.innerText = data.error;
         } else {
-            correctedSentenceDiv.innerText = data.corrected_sentence.join(' ');
+            correctedSentenceDiv.innerText = data.corrected_sentences.join('\n');
         }
         correctedSentenceDiv.style.display = 'block';
+
+        alert(`Time taken to process: ${timeTaken} seconds`);
     })
     .catch(error => {
-        document.getElementById('correctedSentence').innerText = 'Error correcting sentence';
+        document.getElementById('correctedSentence').innerText = 'Error correcting sentences';
         document.getElementById('correctedSentence').style.display = 'block';
     });
 }

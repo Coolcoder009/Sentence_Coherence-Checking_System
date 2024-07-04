@@ -1,9 +1,12 @@
 from flask import Flask, request, jsonify, render_template_string, send_from_directory
 from gramformer import Gramformer
 import os
+import time
+from concurrent.futures import ThreadPoolExecutor
 
 app = Flask(__name__)
 model = None
+executor = ThreadPoolExecutor(max_workers=10)  
 
 @app.route('/')
 def index():
@@ -23,23 +26,32 @@ def load_model():
     except Exception as e:
         return jsonify({'status': 'Failed to load model', 'error': str(e)})
 
+def correct_sentence(sentence):
+    corrected = model.correct(sentence)
+    return ' '.join(corrected)
 
 @app.route('/correct_sentence', methods=['POST'])
-def correct_sentence():
+def correct_sentences():
     if model is None:
         return jsonify({'error': 'Model is not loaded'})
-    
+
     data = request.get_json()
-    sentence = data.get('sentence', '')
+    sentences = data.get('sentences', [])
 
-    if not sentence:
-        return jsonify({'error': 'No sentence provided for correction'})
+    if not sentences:
+        return jsonify({'error': 'No sentences provided for correction'})
 
-    corrected_sentence = model.correct(sentence)    
-    corrected_sentence_list = list(corrected_sentence)
-    return jsonify({'corrected_sentence': corrected_sentence_list})
+    start_time = time.time()  
 
+    futures = [executor.submit(correct_sentence, sentence) for sentence in sentences]
+    corrected_sentences = [future.result() for future in futures]
 
+    end_time = time.time()  
+    time_taken = end_time - start_time  
+
+    app.logger.info(f'Time taken to process sentences: {time_taken} seconds')
+
+    return jsonify({'corrected_sentences': corrected_sentences, 'time_taken': time_taken})
 
 if __name__ == '__main__':
     app.run(debug=True)
