@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammaraide</title>
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Sentence Corrector</h1>
+        <div class="button-container">
+            <button id="loadModelBtn">Load Model</button>
+        </div>
+        <div id="modelStatus"></div>
+        <div id="loadingSpinner" class="spinner" style="display:none;"></div>
+        <form id="sentenceForm" style="display:none;">
+            <label for="inputSentence">Enter a sentence:</label><br>
+            <input type="text" id="inputSentence" name="inputSentence"><br><br>
+            <label for="textfile">Upload a text file:</label><br>
+            <input type="file" id="textfile" name="textfile" accept=".txt"><br><br>
+            <input type="submit" value="Correct Sentence">
+        </form>
+        <div id="correctedSentence" style="display:none;"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
