@@ -28,6 +28,9 @@ document.getElementById('sentenceForm').addEventListener('submit', function(even
 
     const startTime = new Date().getTime(); 
 
+    document.getElementById('correctionSpinner').style.display = 'block';
+    document.getElementById('correctedSentenceWrapper').style.opacity = '0';
+
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -50,6 +53,7 @@ function sendSentencesForCorrection(sentences, startTime) {
     })
     .then(response => response.json())
     .then(data => {
+        document.getElementById('correctionSpinner').style.display = 'none';
         const endTime = new Date().getTime(); 
         const timeTaken = (endTime - startTime) / 1000; 
 
@@ -59,12 +63,16 @@ function sendSentencesForCorrection(sentences, startTime) {
         } else {
             correctedSentenceDiv.innerText = data.corrected_sentences.join('\n');
         }
-        correctedSentenceDiv.style.display = 'block';
+
+        const correctedSentenceWrapper = document.getElementById('correctedSentenceWrapper');
+        correctedSentenceWrapper.style.opacity = '1';
 
         alert(`Time taken to process: ${timeTaken} seconds`);
     })
     .catch(error => {
-        document.getElementById('correctedSentence').innerText = 'Error correcting sentences';
-        document.getElementById('correctedSentence').style.display = 'block';
+        document.getElementById('correctionSpinner').style.display = 'none';
+        const correctedSentenceDiv = document.getElementById('correctedSentence');
+        correctedSentenceDiv.innerText = 'Error correcting sentences';
+        document.getElementById('correctedSentenceWrapper').style.opacity = '1';
     });
 }

@@ -1,7 +1,6 @@
-
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0; 
+    background-color: #f0f0f0;
     margin: 0;
     padding: 0;
     display: flex;
@@ -57,6 +56,7 @@ body {
 
 form {
     text-align: left;
+    margin-bottom: 20px;
 }
 
 form label {
@@ -89,8 +89,14 @@ form input[type="submit"]:hover {
     background-color: darkgreen;
 }
 
+#correctedSentenceWrapper {
+    max-height: 200px; 
+    overflow-y: auto;
+    opacity: 1;
+    margin-top: 20px; /* Space between the form and the output box */
+}
+
 #correctedSentence {
-    margin-top: 20px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -98,7 +104,6 @@ form input[type="submit"]:hover {
     font-size: 16px;
     text-align: left;
 }
-
 
 input[type="file"] {
     display: block;

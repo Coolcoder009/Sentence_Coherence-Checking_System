@@ -22,7 +22,10 @@
             <input type="file" id="textfile" name="textfile" accept=".txt"><br><br>
             <input type="submit" value="Correct Sentence">
         </form>
-        <div id="correctedSentence" style="display:none;"></div>
+        <div id="correctionSpinner" class="spinner" style="display:none;"></div>
+        <div id="correctedSentenceWrapper" class="collapsible">
+            <div id="correctedSentence"></div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

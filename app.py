@@ -6,7 +6,8 @@ from concurrent.futures import ThreadPoolExecutor
 
 app = Flask(__name__)
 model = None
-executor = ThreadPoolExecutor(max_workers=10)  
+workers=50
+executor = ThreadPoolExecutor(max_workers=workers)  
 
 @app.route('/')
 def index():
